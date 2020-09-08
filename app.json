@@ -27,10 +27,6 @@
     "MONGO_DB_URL": {
       "description": "Mongo Database URL Ex: mongodb+srv://user:password@host.net/test",
       "value": ""
-    },
-    "USER_SESSION_STRING": {
-      "description": "user session String generate by using TelegramSessionStringGen.py",
-      "value": ""
     }
   },
    "addons": [],
