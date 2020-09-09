@@ -48,7 +48,7 @@ async def getid(event):
 async def removeforward(event):
     command = event.text.split()
     if len(command) > 1:
-        db.forwards.delete_one({'_id': int(command[1])})
+        db.forwards.delete_one({'_id': f'{command[1]}'})
         update_forward_map()
         await event.respond(f"removed forward config for {command[1]}")
     else:
