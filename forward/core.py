@@ -1,24 +1,8 @@
-import logging
 import os
-from logging.handlers import RotatingFileHandler
 
-import pymongo
-from telethon import events, TelegramClient
+from telethon import events
+from forward import bot, db, LOGGER, config
 
-from forward.__main__ import LOGGER
-from prod_config import Config
-
-ENV = bool(os.environ.get('ENV', False))
-
-if ENV:
-    from prod_config import Config
-else:
-    from dev_config import Development as Config
-
-bot = TelegramClient("ForwardBot", api_id=Config.APP_ID,
-                     api_hash=Config.API_HASH).start(bot_token=Config.BOT_TOKEN)
-mongo_client = pymongo.MongoClient(Config.MONGO_DB_URL)
-db = mongo_client.samaydb
 forward_map = dict()
 
 
@@ -31,7 +15,7 @@ def update_forward_map():
 update_forward_map()
 
 
-@bot.on(events.NewMessage(pattern='/setforward', from_users=list(Config.SUDO_USERS)))
+@bot.on(events.NewMessage(pattern='/setforward', from_users=list(config.SUDO_USERS)))
 async def seforward(event):
     command = event.text.split()
     if len(command) > 2:
@@ -50,7 +34,7 @@ async def getid(event):
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage(pattern='/removeforward', from_users=list(Config.SUDO_USERS)))
+@bot.on(events.NewMessage(pattern='/removeforward', from_users=list(config.SUDO_USERS)))
 async def removeforward(event):
     command = event.text.split()
     if len(command) > 1:
@@ -93,9 +77,7 @@ async def echo(event):
 
 
 def main():
-    if Config.BOT_TOKEN is not None:
-
-        global bot
+    if config.BOT_TOKEN is not None:
         bot.run_until_disconnected()
     else:
         LOGGER.error("BOT_TOKEN is mandatory to start session"

@@ -28,6 +28,10 @@
       "description": "Mongo Database URL Ex: mongodb+srv://user:password@host.net/test",
       "value": ""
     },
+	"STRIP_FILE_NAMES":{
+	  "description": "Enter single or multiple texts separated by | symbol to remove from filename Ex: HDRIP|BRRIP ",
+      "required": false
+	},
     "SUDO_USERS": {
       "description": "sudo users who controls the forward Bot.send ids separated by space",
       "value": ""

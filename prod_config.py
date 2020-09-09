@@ -8,6 +8,7 @@ class Config(object):
     BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
     MONGO_DB_URL = os.environ.get("MONGO_DB_URL", None)
     LOG_MAX_FILE_SIZE = 50000000
+    STRIP_FILE_NAMES = os.environ.get("STRIP_FILE_NAMES", None)
     SUDO_USERS = list(set(
         int(x) for x in os.environ.get("SUDO_USERS", "").split()
     ))
