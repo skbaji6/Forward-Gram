@@ -34,9 +34,10 @@ async def seforward(event):
     if len(command) > 2 :
         db.forwards.find_one_and_update({'_id': command[1]}, {'$set': {'_id': command[1], 'forwardTo': command[2]}}, upsert=True)
         update_forward_map()
+        await event.respond(f"Forward set {command[1]} ==> {command[2]}")
         raise events.StopPropagation
     else :
-        await event.respond("Please Enter Source and Destination chat Ids Ex:/setforward -100234 -100345")
+        await event.respond("Please Enter Source and Destination chat Ids Ex:/setforward 123456 789101")
 
 
 @bot.on(events.NewMessage(pattern='/getid'))
@@ -52,12 +53,25 @@ async def removeforward(event):
         update_forward_map()
         await event.respond(f"removed forward config for {command[1]}")
     else:
-        await event.respond("Please Enter chat id to remove forward Ex:/removeforward -1002234")
+        await event.respond("Please Enter chat id to remove forward Ex:/removeforward 123456")
     raise events.StopPropagation
 
 @bot.on(events.NewMessage(pattern='/help'))
 async def help(event):
-    await event.respond("add this Bot to your group or Channel as admin and configure using Following are the commands List \n /getid \n /setforward \n /removeforward")
+    await event.respond("Step 1: Add this Bot to your group or Channel as admin\n"
+                        "Step 2: Get ids from channel or group using /getid command from respective channel or group "
+                        "Step 3: By using those ids configure forwards using following Commands"
+                        "\n /setforward source-channel-id destination-channel-id (Ex:/setforward 123456 789101)"
+                        "\n /removeforward source-channel-id (Ex:/setforward 123456)")
+    raise events.StopPropagation
+
+@bot.on(events.NewMessage(pattern='/start'))
+async def help(event):
+    await event.respond("Step 1: Add this Bot to your group or Channel as admin\n"
+                        "Step 2: Get ids from channel or group using /getid command from respective channel or group "
+                        "Step 3: By using those ids configure forwards using following Commands"
+                        "\n /setforward source-channel-id destination-channel-id (Ex:/setforward 123456 789101)"
+                        "\n /removeforward source-channel-id (Ex:/setforward 123456)")
     raise events.StopPropagation
 
 
