@@ -27,6 +27,10 @@
     "MONGO_DB_URL": {
       "description": "Mongo Database URL Ex: mongodb+srv://user:password@host.net/test",
       "value": ""
+    },
+    "SUDO_USERS": {
+      "description": "sudo users who controls the forward Bot.send ids separated by space",
+      "value": ""
     }
   },
    "addons": [],
