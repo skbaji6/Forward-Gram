@@ -59,10 +59,10 @@ async def removeforward(event):
 @bot.on(events.NewMessage(pattern='/help'))
 async def help(event):
     await event.respond("Step 1: Add this Bot to your group or Channel as admin\n"
-                        "Step 2: Get ids from channel or group using /getid command from respective channel or group "
-                        "Step 3: By using those ids configure forwards using following Commands"
-                        "\n /setforward source-channel-id destination-channel-id (Ex:/setforward 123456 789101)"
-                        "\n /removeforward source-channel-id (Ex:/setforward 123456)")
+                        "\nStep 2: Get ids from channel or group using /getid command from respective channel or group "
+                        "\n\nStep 3: By using those ids configure forwards using following Commands"
+                        "\n\n /setforward source-channel-id destination-channel-id (Ex:/setforward 123456 789101)"
+                        "\n\n /removeforward source-channel-id (Ex:/setforward 123456)")
     raise events.StopPropagation
 
 @bot.on(events.NewMessage(pattern='/start'))
