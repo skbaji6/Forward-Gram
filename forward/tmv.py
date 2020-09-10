@@ -85,8 +85,8 @@ async def post_to_leech(bot, db):
                 file_name = file_name.replace(fname, "").strip()
         LOGGER.info(f"Processing id {mag['_id']} with name {file_name}")
         user = await bot.get_entity(-1001297647039)
-        sent_message: Message = await bot.send_message(user, f"{mag['magnet']}|{file_name}")
-        await sent_message.reply("/gtleech")
+        sent_message: Message = await bot.send_message(user, f"{mag['magnet']}")
+        await sent_message.reply(f"/gtleech rename {file_name}")
         last_processed_id = mag['_id']
     if not last_processed_id_from_db == last_processed_id:
         db.lastProcessedMagnet.find_one_and_update({'_id': 'tamilmv'},
