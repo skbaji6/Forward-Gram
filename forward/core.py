@@ -1,6 +1,7 @@
 import os
 
 from telethon import events
+
 from forward import bot, db, LOGGER, config
 
 forward_map = dict()
@@ -16,7 +17,7 @@ update_forward_map()
 
 
 @bot.on(events.NewMessage(pattern='/setforward', from_users=list(config.SUDO_USERS)))
-async def seforward(event):
+async def setforward(event):
     command = event.text.split()
     if len(command) > 2:
         db.forwards.find_one_and_update({'_id': command[1]}, {'$set': {'_id': command[1], 'forwardTo': command[2]}},
@@ -74,6 +75,11 @@ async def echo(event):
         user = await event.client.get_entity(int(forward_map[f'{event.message.chat_id}']))
         print(f">> get it {event.text}")
         await event.client.send_message(user, event.message)
+
+
+@bot.on(events.NewMessage(pattern='/log', from_users=list(config.SUDO_USERS)))
+async def log(event):
+    await event.reply(file="Forward-Gram.txt")
 
 
 def main():

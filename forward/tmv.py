@@ -6,7 +6,7 @@ from urllib.parse import parse_qs
 
 from telethon.tl.types import Message
 
-from forward import bot, config
+from forward import bot, config, user
 from forward import db
 from forward import LOGGER
 from forward.utils import get_next_value
@@ -51,10 +51,13 @@ async def tmv_scrape(db):
                     sub_urls.append(atag.attrs['href'])
 
     for magnet in list(magnets):
-        db.magnets.find_one_and_update({'magnet': magnet},
-                                       {'$setOnInsert': {'_id': await get_next_value(db, 'magnets_collection'),
-                                                         'magnet': magnet, 'isProcessed': False}},
-                                       upsert=True)
+        db_magnet = db.magnets.find_one({'magnet': magnet})
+        if db_magnet is None:
+            LOGGER.info("New Magnet Found Inserting into DB")
+            db.magnets.find_one_and_update({'magnet': magnet},
+                                           {'$setOnInsert': {'_id': await get_next_value(db, 'magnets_collection'),
+                                                             'magnet': magnet, 'isProcessed': False}},
+                                           upsert=True)
 
 
 async def get_magnet_links(url):
@@ -84,8 +87,8 @@ async def post_to_leech(bot, db):
             for fname in config.STRIP_FILE_NAMES.split("|"):
                 file_name = file_name.replace(fname, "").strip()
         LOGGER.info(f"Processing id {mag['_id']} with name {file_name}")
-        user = await bot.get_entity(-1001297647039)
-        sent_message: Message = await bot.send_message(user, f"{mag['magnet']}")
+        target_user = await user.get_entity(-1001297647039)
+        sent_message: Message = await user.send_message(target_user, f"{mag['magnet']}")
         await sent_message.reply(f"/gtleech rename {file_name}")
         last_processed_id = mag['_id']
     if not last_processed_id_from_db == last_processed_id:
