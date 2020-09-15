@@ -10,6 +10,7 @@ class Config(object):
     MONGO_DB_URL = os.environ.get("MONGO_DB_URL", None)
     LOG_MAX_FILE_SIZE = 50000000
     STRIP_FILE_NAMES = os.environ.get("STRIP_FILE_NAMES", None)
+    TAMILMV_URL = os.environ.get("TAMILMV_URL", None)
     SUDO_USERS = list(set(
         int(x) for x in os.environ.get("SUDO_USERS", "").split()
     ))

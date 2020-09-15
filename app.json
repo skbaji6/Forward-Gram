@@ -35,6 +35,10 @@
     "SUDO_USERS": {
       "description": "sudo users who controls the forward Bot.send ids separated by space",
       "value": ""
+    },
+    "TAMILMV_URL": {
+      "description": "Enter Current Tamil MV updated URL Ex: https://www.1tamilmv.life/",
+      "value": ""
     }
   },
    "addons": [],

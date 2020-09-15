@@ -24,7 +24,7 @@ def init():
 async def tmv_scrape(db):
     sub_urls = []
 
-    response = requests.get('https://www.1tamilmv.life/')
+    response = requests.get(config.TAMILMV_URL)
     soup = BeautifulSoup(response.text, 'html.parser')
     tag = soup.find('div', {'class': 'ipsWidget_inner'})
     ptags = tag.find_all("p")
@@ -79,6 +79,11 @@ async def post_to_leech(bot, db):
     last_processed_id_from_db = db.lastProcessedMagnet.find_one({"_id": 'tamilmv'})
     magnets = db.magnets.find({'_id': {'$gt': last_processed_id_from_db['value'], '$lt': last_processed_id_from_db['value'] + 5}});
     last_processed_id=last_processed_id_from_db
+    target_user = None
+    if magnets is not None:
+        target_user = await user.get_entity(-1001297647039)
+        sent_img_message: Message =await user.send_message(target_user, file="moviez_trends.jpg")
+        await sent_img_message.reply(f"/savethumbnail")
     for mag in magnets:
         parsed = urlparse.urlparse(mag['magnet'])
         #print(parse_qs(parsed.query)['dn'][0].replace('www.1TamilMV.life - ',''))
@@ -87,7 +92,6 @@ async def post_to_leech(bot, db):
             for fname in config.STRIP_FILE_NAMES.split("|"):
                 file_name = file_name.replace(fname, "").strip()
         LOGGER.info(f"Processing id {mag['_id']} with name {file_name}")
-        target_user = await user.get_entity(-1001297647039)
         sent_message: Message = await user.send_message(target_user, f"{mag['magnet']}")
         await sent_message.reply(f"/gtleech rename {file_name}")
         last_processed_id = mag['_id']
