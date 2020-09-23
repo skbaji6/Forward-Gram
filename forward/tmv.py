@@ -101,17 +101,18 @@ async def post_to_leech(bot, db):
         #print(parse_qs(parsed.query)['dn'][0].replace('www.1TamilMV.life - ',''))
         #file_name=parse_qs(parsed.query)['dn'][0]
         downloaded_file=await download_from_url(mag['magnet'])
-        file_name = downloaded_file
-        if config.STRIP_FILE_NAMES:
-            for fname in config.STRIP_FILE_NAMES.split("|"):
-                file_name = file_name.replace(fname, "").strip()
-            file_name = file_name.replace("Â", "").strip()
-            file_name = file_name.replace(".torrent", "").strip()
-        LOGGER.info(f"Processing id {mag['_id']} with name {file_name}")
-        #sent_message: Message = await user.send_message(target_user, f"{mag['magnet']}")
-        sent_message: Message = await user.send_message(target_user, file=downloaded_file)
-        await sent_message.reply(f"/gtleech rename {file_name}")
-        os.remove(downloaded_file)
+        if downloaded_file is not None:
+            file_name = downloaded_file
+            if config.STRIP_FILE_NAMES:
+                for fname in config.STRIP_FILE_NAMES.split("|"):
+                    file_name = file_name.replace(fname, "").strip()
+                file_name = file_name.replace("Â", "").strip()
+                file_name = file_name.replace(".torrent", "").strip()
+            LOGGER.info(f"Processing id {mag['_id']} with name {file_name}")
+            #sent_message: Message = await user.send_message(target_user, f"{mag['magnet']}")
+            sent_message: Message = await user.send_message(target_user, file=downloaded_file)
+            await sent_message.reply(f"/gtleech rename {file_name}")
+            os.remove(downloaded_file)
         last_processed_id = mag['_id']
     if not last_processed_id_from_db == last_processed_id:
         db.lastProcessedMagnet.find_one_and_update({'_id': 'tamilmv'},
@@ -120,7 +121,11 @@ async def post_to_leech(bot, db):
 
 
 async def download_from_url(url):
-    r = requests.get(url)
-    file_name = re.findall("filename=\"(.+)\"", r.headers["Content-Disposition"])[0]
-    open(file_name, 'wb').write(r.content)
-    return file_name
+    try:
+        r = requests.get(url)
+        file_name = re.findall("filename=\"(.+)\"", r.headers["Content-Disposition"])[0]
+        open(file_name, 'wb').write(r.content)
+        return file_name
+    except Exception as e:
+        LOGGER.info('Unable to fetch file or filename from Url : '+url)
+        return None
